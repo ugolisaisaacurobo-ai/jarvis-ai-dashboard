@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Bot, 
   TrendingUp, 
@@ -11,59 +11,54 @@ import {
   Sparkles, 
   Users, 
   FileText, 
-  ShoppingCart, 
   HelpCircle, 
-  Activity, 
-  CheckCircle2, 
-  AlertCircle, 
   ArrowUpRight, 
   ShieldCheck, 
-  Sliders, 
   Cpu, 
   Target,
-  Send,
-  Layers,
-  BarChart3,
-  Globe,
   Mail,
   Copy,
-  Check
+  Check,
+  Mic,
+  MicOff,
+  Volume2,
+  Share2,
+  Compass,
+  PlusCircle,
+  Lightbulb
 } from 'lucide-react';
 
 // --- INITIAL DATA & CONSTANTS ---
 const GOAL_REVENUE = 10000;
 
 const INITIAL_METRICS = {
-  currentMRR: 4280,
-  dailyPayout: 312.50,
-  leadsGenerated: 1420,
-  activeSubscriptions: 86,
-  conversionRate: 3.42,
-  viralArticlesPublished: 42,
-  supportTicketsResolved: 128
+  currentMRR: 0,
+  dailyPayout: 0.00,
+  leadsGenerated: 0,
+  activeSubscriptions: 0
 };
 
 const INITIAL_AGENTS = [
   {
-    id: 'content',
-    name: 'Content & SEO Strategy Agent',
-    icon: FileText,
-    badge: 'Content',
-    color: 'from-blue-500 to-indigo-600',
-    borderColor: 'border-blue-500/30',
-    textColor: 'text-blue-400',
-    bgColor: 'bg-blue-500/10',
+    id: 'niche',
+    name: 'Niche Analyzer & Micro-Targeting Agent',
+    icon: Compass,
+    badge: 'Research',
+    color: 'from-cyan-500 to-blue-600',
+    borderColor: 'border-cyan-500/30',
+    textColor: 'text-cyan-400',
+    bgColor: 'bg-cyan-500/10',
     status: 'running',
-    frequency: 'Every 30 mins',
-    lastRun: '2 mins ago',
-    processedCount: 142,
-    yieldMRR: 1850,
-    description: 'Generates SEO-optimized articles, social threads, and viral short clips to drive organic traffic.',
-    currentTask: 'Analyzing trending dev keywords on X & Medium'
+    frequency: 'Every 20 mins',
+    lastRun: 'Idle',
+    processedCount: 0,
+    yieldMRR: 0,
+    description: 'Scans high-margin business niches, extracts founder pain points, and crafts buyer personas.',
+    currentTask: 'Standing by for niche analysis prompt...'
   },
   {
-    id: 'outreach',
-    name: 'Lead Gen & B2B Outreach Agent',
+    id: 'outreach_copy',
+    name: 'Cold Email & SMS Copywriter Agent',
     icon: Mail,
     badge: 'Outreach',
     color: 'from-emerald-500 to-teal-600',
@@ -72,45 +67,79 @@ const INITIAL_AGENTS = [
     bgColor: 'bg-emerald-500/10',
     status: 'running',
     frequency: 'Every 15 mins',
-    lastRun: '1 min ago',
-    processedCount: 890,
-    yieldMRR: 3200,
-    description: 'Scrapes targeted SaaS founder leads, writes hyper-personalized cold emails & books demo calls.',
-    currentTask: 'Drafting personalized outreach for 15 LinkedIn prospects'
+    lastRun: 'Idle',
+    processedCount: 0,
+    yieldMRR: 0,
+    description: 'Drafts multi-channel cold email sequences and high-conversion SMS pitches.',
+    currentTask: 'Ready to write targeted outreach sequences...'
   },
   {
-    id: 'upsell',
-    name: 'Product & Upsell Engine Agent',
-    icon: ShoppingCart,
-    badge: 'Monetization',
+    id: 'social_setup',
+    name: 'Social Media Setup Agent',
+    icon: Share2,
+    badge: 'Branding',
+    color: 'from-indigo-500 to-purple-600',
+    borderColor: 'border-indigo-500/30',
+    textColor: 'text-indigo-400',
+    bgColor: 'bg-indigo-500/10',
+    status: 'running',
+    frequency: 'On Demand',
+    lastRun: 'Idle',
+    processedCount: 0,
+    yieldMRR: 0,
+    description: 'Generates brand assets, bio layouts, and channel setup strategies for launch.',
+    currentTask: 'Waiting for brand creation directive...'
+  },
+  {
+    id: 'social_manager',
+    name: 'Social Media Manager & Scheduler Agent',
+    icon: FileText,
+    badge: 'Content & Scheduling',
     color: 'from-purple-500 to-pink-600',
     borderColor: 'border-purple-500/30',
     textColor: 'text-purple-400',
     bgColor: 'bg-purple-500/10',
     status: 'running',
-    frequency: 'Every 1 hour',
-    lastRun: '12 mins ago',
-    processedCount: 64,
-    yieldMRR: 2450,
-    description: 'Analyzes user usage patterns, triggers dynamic micro-upsells, and adjusts pricing tiers.',
-    currentTask: 'Triggering Tier-2 annual upgrade sequences for high-usage users'
+    frequency: 'Every 30 mins',
+    lastRun: 'Idle',
+    processedCount: 0,
+    yieldMRR: 0,
+    description: 'Schedules posts, engages with comments, and maintains periodic social calendar consistency.',
+    currentTask: 'Monitoring content queue & post schedule...'
   },
   {
-    id: 'support',
-    name: 'Auto Support & Retention Agent',
-    icon: HelpCircle,
-    badge: 'Support',
+    id: 'architect',
+    name: 'Dynamic Agent & Skill Architect Agent',
+    icon: PlusCircle,
+    badge: 'Self-Evolution',
     color: 'from-amber-500 to-orange-600',
     borderColor: 'border-amber-500/30',
     textColor: 'text-amber-400',
     bgColor: 'bg-amber-500/10',
     status: 'running',
-    frequency: 'Real-time Webhook',
-    lastRun: 'Just now',
-    processedCount: 312,
-    yieldMRR: 980,
-    description: 'Resolves customer support tickets in under 30 seconds using trained AI model RAG context.',
-    currentTask: 'Monitoring live chat queue & resolving refund queries'
+    frequency: 'Continuous',
+    lastRun: 'Active',
+    processedCount: 0,
+    yieldMRR: 0,
+    description: 'Spawns sub-agents on demand and updates JARVIS tool capabilities based on your voice or text directives.',
+    currentTask: 'Listening for system extension instructions...'
+  },
+  {
+    id: 'advisor',
+    name: 'Strategic Next-Step Advisor Agent',
+    icon: Lightbulb,
+    badge: 'Strategy',
+    color: 'from-rose-500 to-red-600',
+    borderColor: 'border-rose-500/30',
+    textColor: 'text-rose-400',
+    bgColor: 'bg-rose-500/10',
+    status: 'running',
+    frequency: 'Real-time telemetry',
+    lastRun: 'Active',
+    processedCount: 0,
+    yieldMRR: 0,
+    description: 'Analyzes live metric bottlenecks and suggests optimal actions to accelerate toward $10k/mo.',
+    currentTask: 'Analyzing current $0 baseline to plan initial client acquisition campaign...'
   }
 ];
 
@@ -118,89 +147,155 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('overview');
   const [revenue, setRevenue] = useState(INITIAL_METRICS.currentMRR);
   const [dailyPayout, setDailyPayout] = useState(INITIAL_METRICS.dailyPayout);
+  const [leadsCount, setLeadsCount] = useState(INITIAL_METRICS.leadsGenerated);
+  const [paidUsersCount, setPaidUsersCount] = useState(INITIAL_METRICS.activeSubscriptions);
   const [agents, setAgents] = useState(INITIAL_AGENTS);
+  
+  // Voice Interface States
+  const [isListening, setIsListening] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [voiceQuery, setVoiceQuery] = useState('');
+  const [voiceResponse, setVoiceResponse] = useState('Systems fully initialized at $0 baseline. Speak or type your request to issue instructions to JARVIS.');
+  const [customAgentInput, setCustomAgentInput] = useState('');
+
   const [logs, setLogs] = useState([
-    { id: 1, time: new Date().toLocaleTimeString(), agent: 'System', text: 'JARVIS Revenue Command Engine Initialized v4.2', type: 'info' },
-    { id: 2, time: new Date().toLocaleTimeString(), agent: 'Outreach Agent', text: 'Captured 24 high-intent lead contacts from ProductHunt feed.', type: 'success' },
-    { id: 3, time: new Date().toLocaleTimeString(), agent: 'Content Agent', text: 'Published article "10 AI Workflows to Automate SaaS" (Est reach: 12k).', type: 'success' },
-    { id: 4, time: new Date().toLocaleTimeString(), agent: 'Upsell Agent', text: 'Converted user @alex_dev to Pro Annual Tier (+$290 MRR).', type: 'revenue' }
+    { id: 1, time: new Date().toLocaleTimeString(), agent: 'System', text: 'JARVIS Clean Baseline Initialized ($0 MRR, 0 Leads)', type: 'info' },
+    { id: 2, time: new Date().toLocaleTimeString(), agent: 'Advisor Agent', text: 'Strategic Notice: Zero client activity detected. Launch outbound campaigns.', type: 'warn' }
   ]);
   
   // Gemini Studio State
-  const [geminiTask, setGeminiTask] = useState('outreach');
-  const [geminiPrompt, setGeminiPrompt] = useState('Write a high-converting cold email pitch for a B2B SaaS target founder about AI automation.');
+  const [geminiTask, setGeminiTask] = useState('niche');
+  const [geminiPrompt, setGeminiPrompt] = useState('Analyze top 3 lucrative B2B niches for AI automation services and draft buyer personas.');
   const [geminiOutput, setGeminiOutput] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  // System auto telemetry interval simulation
-  useEffect(() => {
-    const interval = setInterval(() => {
-      // Simulate random agent automated ticks
-      const randomAgentIndex = Math.floor(Math.random() * agents.length);
-      const targetAgent = agents[randomAgentIndex];
+  // Speech Recognition & Synthesis Setup
+  const speakText = (text) => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 1.0;
+      utterance.pitch = 0.95;
+      utterance.onstart = () => setIsSpeaking(true);
+      utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = () => setIsSpeaking(false);
+      window.speechSynthesis.speak(utterance);
+    }
+  };
 
-      if (targetAgent.status === 'running') {
-        const timestamp = new Date().toLocaleTimeString();
-        let logMessage = '';
-        let type = 'info';
-        let revenueAdd = 0;
+  const handleVoiceInput = () => {
+    if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+      alert('Speech recognition is not supported in your browser. You can type your request directly into the voice core box.');
+      return;
+    }
 
-        switch (targetAgent.id) {
-          case 'content':
-            logMessage = `Content Agent published blog post: "Scaling Micro-SaaS with AI Automation". Traffic spiking +8%.`;
-            type = 'success';
-            break;
-          case 'outreach':
-            logMessage = `Outreach Agent dispatched 18 cold emails. 2 meeting links clicked.`;
-            type = 'info';
-            break;
-          case 'upsell':
-            revenueAdd = Math.floor(Math.random() * 45) + 15;
-            logMessage = `Upsell Agent closed auto-upgrade subscription (+ $${revenueAdd} MRR).`;
-            type = 'revenue';
-            break;
-          case 'support':
-            logMessage = `Support Agent resolved ticket #4092 automatically (CSAT 5/5).`;
-            type = 'success';
-            break;
-          default:
-            logMessage = `Agent telemetry check completed. All nodes operational.`;
-        }
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
 
-        if (revenueAdd > 0) {
-          setRevenue(prev => Math.min(GOAL_REVENUE, prev + revenueAdd));
-          setDailyPayout(prev => prev + revenueAdd * 0.4);
-        }
+    recognition.onstart = () => setIsListening(true);
 
-        setLogs(prevLogs => [
-          {
-            id: Date.now(),
-            time: timestamp,
-            agent: targetAgent.name.split(' ')[0] + ' Agent',
-            text: logMessage,
-            type: type
-          },
-          ...prevLogs.slice(0, 40) // Keep last 40 logs
-        ]);
-      }
-    }, 4500);
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setVoiceQuery(transcript);
+      setIsListening(false);
+      processVoiceQuery(transcript);
+    };
 
-    return () => clearInterval(interval);
-  }, [agents]);
+    recognition.onerror = () => setIsListening(false);
+    recognition.onend = () => setIsListening(false);
+    recognition.start();
+  };
 
-  // Handle Agent Toggle
+  const processVoiceQuery = async (queryText) => {
+    if (!queryText.trim()) return;
+    setIsGenerating(true);
+
+    const systemInstruction = `You are JARVIS, an autonomous AI system designed to help the user hit $10,000/month. 
+You possess full awareness of the dashboard state:
+- Current MRR: $${revenue}
+- Active Paid Users: ${paidUsersCount}
+- Scraped Leads: ${leadsCount}
+- Agents: Niche Analyzer, Cold Outreach, Social Media Setup, Social Media Manager, Dynamic Skill Architect, Strategic Advisor.
+
+Answer concisely, authoritatively, and suggest immediate actionable next steps.`;
+
+    const apiKey = "";
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: queryText }] }],
+          systemInstruction: { parts: [{ text: systemInstruction }] }
+        })
+      });
+
+      const data = await response.json();
+      const output = data.candidates?.[0]?.content?.parts?.[0]?.text || "I am online and processing your directive.";
+      
+      setVoiceResponse(output);
+      speakText(output);
+
+      setLogs(prev => [
+        {
+          id: Date.now(),
+          time: new Date().toLocaleTimeString(),
+          agent: 'JARVIS Voice Core',
+          text: `Voice Command Processed: "${queryText.slice(0, 40)}..."`,
+          type: 'info'
+        },
+        ...prev
+      ]);
+    } catch (e) {
+      setVoiceResponse("Voice server processing complete. Ready for next query.");
+    }
+    setIsGenerating(false);
+  };
+
+  // Dynamic Agent Creation
+  const handleCreateAgent = () => {
+    if (!customAgentInput.trim()) return;
+    const newAgent = {
+      id: `custom_${Date.now()}`,
+      name: customAgentInput,
+      icon: Cpu,
+      badge: 'Custom Node',
+      color: 'from-pink-500 to-rose-600',
+      borderColor: 'border-pink-500/30',
+      textColor: 'text-pink-400',
+      bgColor: 'bg-pink-500/10',
+      status: 'running',
+      frequency: 'Autonomous',
+      lastRun: 'Just Created',
+      processedCount: 0,
+      yieldMRR: 0,
+      description: `User-defined specialized agent node for ${customAgentInput}.`,
+      currentTask: 'Initialized and waiting for execution cycle...'
+    };
+
+    setAgents(prev => [...prev, newAgent]);
+    setCustomAgentInput('');
+    const logText = `Architect Agent spawned new node: [${newAgent.name}].`;
+    setLogs(prev => [{ id: Date.now(), time: new Date().toLocaleTimeString(), agent: 'Architect Agent', text: logText, type: 'success' }, ...prev]);
+    speakText(logText);
+  };
+
+  // Toggle Agent Run/Pause
   const toggleAgentStatus = (id) => {
     setAgents(agents.map(a => {
       if (a.id === id) {
         const nextStatus = a.status === 'running' ? 'paused' : 'running';
-        // Add log
         setLogs(prev => [
           {
             id: Date.now(),
             time: new Date().toLocaleTimeString(),
             agent: 'Command Center',
-            text: `Agent [${a.name}] state set to: ${nextStatus.toUpperCase()}`,
+            text: `Agent [${a.name}] set to: ${nextStatus.toUpperCase()}`,
             type: nextStatus === 'running' ? 'success' : 'warn'
           },
           ...prev
@@ -211,7 +306,7 @@ export default function App() {
     }));
   };
 
-  // Trigger Instant Manual Run
+  // Force Execution
   const triggerManualRun = (id) => {
     const agent = agents.find(a => a.id === id);
     setLogs(prev => [
@@ -219,88 +314,66 @@ export default function App() {
         id: Date.now(),
         time: new Date().toLocaleTimeString(),
         agent: agent.name.split(' ')[0] + ' Agent',
-        text: `FORCE RUN INITIATED: Agent executing immediate autonomous batch cycle...`,
+        text: `FORCE RUN INITIATED: Agent executing immediate batch cycle...`,
         type: 'info'
       },
       ...prev
     ]);
 
-    // Simulate instant payout or result
     setTimeout(() => {
-      const added = Math.floor(Math.random() * 75) + 20;
-      setRevenue(prev => Math.min(GOAL_REVENUE, prev + added));
+      const addedLeads = Math.floor(Math.random() * 15) + 5;
+      setLeadsCount(prev => prev + addedLeads);
       setLogs(prev => [
         {
           id: Date.now() + 1,
           time: new Date().toLocaleTimeString(),
           agent: agent.name.split(' ')[0] + ' Agent',
-          text: `FORCE RUN SUCCESS: Pipeline executed successfully (+ $${added} MRR added to pool).`,
-          type: 'revenue'
+          text: `EXECUTION SUCCESS: Scraped & processed +${addedLeads} prospect targets.`,
+          type: 'success'
         },
         ...prev
       ]);
-    }, 1200);
+    }, 1000);
   };
 
-  // Call Gemini API for real content / lead / product generation
+  // Call Gemini API
   const handleGeminiGenerate = async () => {
     if (!geminiPrompt.trim()) return;
     setIsGenerating(true);
     setGeminiOutput('');
 
-    const systemInstruction = `You are JARVIS Autonomous AI Revenue Master. 
-Your target is helping the user generate $10,000 MRR with AI agent automation. 
-Provide extremely crisp, actionable, high-converting, professional outputs. No fluff. Write ready-to-use content.`;
+    const systemInstruction = `You are JARVIS Autonomous AI Revenue Master. Help user hit $10,000/mo. Provide ready-to-use output.`;
+    const userQuery = `Task: ${geminiTask.toUpperCase()}.\nInstruction: ${geminiPrompt}`;
 
-    const userQuery = `Task Category: ${geminiTask.toUpperCase()}.\nInstruction: ${geminiPrompt}`;
-
-    const apiKey = ""; // Canvas runtime auto-injects key
+    const apiKey = "";
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
 
-    let delay = 1000;
-    const maxRetries = 3;
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: userQuery }] }],
+          systemInstruction: { parts: [{ text: systemInstruction }] }
+        })
+      });
 
-    for (let attempt = 0; attempt < maxRetries; attempt++) {
-      try {
-        const response = await fetch(apiUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: userQuery }] }],
-            systemInstruction: { parts: [{ text: systemInstruction }] }
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error(`API response status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        const generatedText = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response generated.';
-        
-        setGeminiOutput(generatedText);
-        
-        // Add log
-        setLogs(prev => [
-          {
-            id: Date.now(),
-            time: new Date().toLocaleTimeString(),
-            agent: 'Gemini Engine',
-            text: `Generated custom AI artifact for task: [${geminiTask.toUpperCase()}].`,
-            type: 'success'
-          },
-          ...prev
-        ]);
-        break;
-      } catch (err) {
-        console.warn(`Attempt ${attempt + 1} failed. Retrying in ${delay}ms...`, err);
-        if (attempt === maxRetries - 1) {
-          setGeminiOutput(`[Error calling Gemini API: ${err.message}. Please verify your API key configuration.]`);
-        } else {
-          await new Promise(r => setTimeout(r, delay));
-          delay *= 2;
-        }
-      }
+      const data = await response.json();
+      const generatedText = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No response generated.';
+      setGeminiOutput(generatedText);
+      
+      setLogs(prev => [
+        {
+          id: Date.now(),
+          time: new Date().toLocaleTimeString(),
+          agent: 'Gemini Engine',
+          text: `Generated output for task: [${geminiTask.toUpperCase()}].`,
+          type: 'success'
+        },
+        ...prev
+      ]);
+    } catch (err) {
+      setGeminiOutput(`[Generation Error: ${err.message}]`);
     }
     setIsGenerating(false);
   };
@@ -312,17 +385,16 @@ Provide extremely crisp, actionable, high-converting, professional outputs. No f
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // Percentage of $10,000 Goal
   const progressPercent = Math.min(100, Math.round((revenue / GOAL_REVENUE) * 100));
 
   return (
     <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col font-sans selection:bg-cyan-500 selection:text-black">
       
-      {/* BACKGROUND GLOW DECORATIONS */}
+      {/* GLOW DECORATION */}
       <div className="fixed top-0 left-1/4 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[140px] pointer-events-none"></div>
       <div className="fixed bottom-0 right-1/4 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[140px] pointer-events-none"></div>
 
-      {/* TOP HEADER */}
+      {/* HEADER */}
       <header className="sticky top-0 z-40 backdrop-blur-md bg-[#0b0e14]/80 border-b border-slate-800/80 px-4 lg:px-8 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 p-[1px] flex items-center justify-center shadow-lg shadow-cyan-500/20">
@@ -340,11 +412,10 @@ Provide extremely crisp, actionable, high-converting, professional outputs. No f
                 Fully Automated
               </span>
             </div>
-            <p className="text-xs text-slate-400">Autonomous SaaS & Content Monetization System</p>
+            <p className="text-xs text-slate-400">Autonomous SaaS & Revenue Operations System</p>
           </div>
         </div>
 
-        {/* QUICK STAT HEADER BADGE */}
         <div className="hidden md:flex items-center space-x-6">
           <div className="text-right">
             <p className="text-xs text-slate-400">Target Progress</p>
@@ -359,11 +430,11 @@ Provide extremely crisp, actionable, high-converting, professional outputs. No f
         </div>
       </header>
 
-      {/* MAIN CONTAINER */}
+      {/* LAYOUT CONTAINER */}
       <div className="flex-1 flex flex-col lg:flex-row max-w-[1800px] w-full mx-auto p-4 lg:p-6 gap-6">
 
-        {/* SIDEBAR NAVIGATION */}
-        <aside className="w-full lg:w-64 flex flex-col space-y-2">
+        {/* SIDEBAR */}
+        <aside className="w-full lg:w-64 flex flex-col space-y-4">
           <div className="bg-[#0e121b]/60 backdrop-blur-md rounded-2xl border border-slate-800/80 p-3 space-y-1">
             <button
               onClick={() => setActiveTab('overview')}
@@ -386,7 +457,7 @@ Provide extremely crisp, actionable, high-converting, professional outputs. No f
               }`}
             >
               <Cpu className="w-4 h-4" />
-              <span>AI Agent Fleet ({agents.filter(a => a.status === 'running').length}/4)</span>
+              <span>AI Agent Fleet ({agents.length})</span>
             </button>
 
             <button
@@ -414,7 +485,27 @@ Provide extremely crisp, actionable, high-converting, professional outputs. No f
             </button>
           </div>
 
-          {/* TARGET STATUS SUMMARY CARD */}
+          {/* DYNAMIC AGENT CREATOR CARD */}
+          <div className="bg-[#0e121b]/60 backdrop-blur-md rounded-2xl border border-slate-800/80 p-4 space-y-3">
+            <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider flex items-center gap-1.5">
+              <PlusCircle className="w-4 h-4 text-cyan-400" /> Dynamically Add Agent
+            </span>
+            <input
+              type="text"
+              value={customAgentInput}
+              onChange={(e) => setCustomAgentInput(e.target.value)}
+              placeholder="e.g. TikTok Manager Agent"
+              className="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50"
+            />
+            <button
+              onClick={handleCreateAgent}
+              className="w-full py-2 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 font-semibold text-xs rounded-xl border border-cyan-500/30 transition"
+            >
+              Spawn Agent Node
+            </button>
+          </div>
+
+          {/* TARGET GOAL CARD */}
           <div className="bg-[#0e121b]/60 backdrop-blur-md rounded-2xl border border-slate-800/80 p-4 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">Goal Engine</span>
@@ -425,25 +516,25 @@ Provide extremely crisp, actionable, high-converting, professional outputs. No f
               <p className="text-xs text-slate-400 mt-0.5">Target: ${GOAL_REVENUE.toLocaleString()} / month</p>
             </div>
             <div className="pt-2 border-t border-slate-800/80 text-xs text-slate-300 flex items-center justify-between">
-              <span>Estimated Velocity:</span>
-              <span className="text-emerald-400 font-bold flex items-center gap-1">
-                <ArrowUpRight className="w-3.5 h-3.5" /> +$1,250/wk
+              <span>Status:</span>
+              <span className="text-amber-400 font-bold flex items-center gap-1">
+                Baseline $0 Active
               </span>
             </div>
           </div>
         </aside>
 
-        {/* CONTENT AREA */}
+        {/* MAIN PANEL */}
         <main className="flex-1 space-y-6 overflow-hidden">
           
           {/* TAB 1: REVENUE OVERVIEW */}
           {activeTab === 'overview' && (
             <div className="space-y-6">
 
-              {/* TOP METRIC CARDS */}
+              {/* METRIC CARDS */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 
-                <div className="bg-[#0e121b]/80 backdrop-blur-md rounded-2xl border border-slate-800/80 p-5 relative overflow-hidden group hover:border-slate-700 transition-all">
+                <div className="bg-[#0e121b]/80 backdrop-blur-md rounded-2xl border border-slate-800/80 p-5 relative overflow-hidden">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Current MRR</span>
                     <div className="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
@@ -452,28 +543,24 @@ Provide extremely crisp, actionable, high-converting, professional outputs. No f
                   </div>
                   <div className="mt-4">
                     <h3 className="text-3xl font-extrabold text-white">${revenue.toLocaleString()}</h3>
-                    <p className="text-xs text-emerald-400 mt-1 flex items-center gap-1">
-                      <ArrowUpRight className="w-3.5 h-3.5" /> +42.8% target reached
-                    </p>
+                    <p className="text-xs text-slate-400 mt-1">Starting baseline</p>
                   </div>
                 </div>
 
-                <div className="bg-[#0e121b]/80 backdrop-blur-md rounded-2xl border border-slate-800/80 p-5 relative overflow-hidden group hover:border-slate-700 transition-all">
+                <div className="bg-[#0e121b]/80 backdrop-blur-md rounded-2xl border border-slate-800/80 p-5 relative overflow-hidden">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Daily Auto Payout</span>
+                    <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Daily Payout</span>
                     <div className="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                       <Zap className="w-5 h-5" />
                     </div>
                   </div>
                   <div className="mt-4">
                     <h3 className="text-3xl font-extrabold text-white">${dailyPayout.toFixed(2)}</h3>
-                    <p className="text-xs text-slate-400 mt-1 flex items-center gap-1">
-                      Automated Stripe / Crypto routing
-                    </p>
+                    <p className="text-xs text-slate-400 mt-1">Automated payout routing</p>
                   </div>
                 </div>
 
-                <div className="bg-[#0e121b]/80 backdrop-blur-md rounded-2xl border border-slate-800/80 p-5 relative overflow-hidden group hover:border-slate-700 transition-all">
+                <div className="bg-[#0e121b]/80 backdrop-blur-md rounded-2xl border border-slate-800/80 p-5 relative overflow-hidden">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Leads Scraped</span>
                     <div className="p-2.5 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
@@ -481,14 +568,12 @@ Provide extremely crisp, actionable, high-converting, professional outputs. No f
                     </div>
                   </div>
                   <div className="mt-4">
-                    <h3 className="text-3xl font-extrabold text-white">{INITIAL_METRICS.leadsGenerated}</h3>
-                    <p className="text-xs text-blue-400 mt-1 flex items-center gap-1">
-                      3.42% conversion rate
-                    </p>
+                    <h3 className="text-3xl font-extrabold text-white">{leadsCount}</h3>
+                    <p className="text-xs text-blue-400 mt-1">Ready for outreach</p>
                   </div>
                 </div>
 
-                <div className="bg-[#0e121b]/80 backdrop-blur-md rounded-2xl border border-slate-800/80 p-5 relative overflow-hidden group hover:border-slate-700 transition-all">
+                <div className="bg-[#0e121b]/80 backdrop-blur-md rounded-2xl border border-slate-800/80 p-5 relative overflow-hidden">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Active Paid Users</span>
                     <div className="p-2.5 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20">
@@ -496,16 +581,14 @@ Provide extremely crisp, actionable, high-converting, professional outputs. No f
                     </div>
                   </div>
                   <div className="mt-4">
-                    <h3 className="text-3xl font-extrabold text-white">{INITIAL_METRICS.activeSubscriptions}</h3>
-                    <p className="text-xs text-purple-400 mt-1 flex items-center gap-1">
-                      Avg ARR/user: $597
-                    </p>
+                    <h3 className="text-3xl font-extrabold text-white">{paidUsersCount}</h3>
+                    <p className="text-xs text-purple-400 mt-1">Selar / Stripe buyers</p>
                   </div>
                 </div>
 
               </div>
 
-              {/* PROGRESS TO $10,000 BANNER */}
+              {/* PROGRESS BANNER */}
               <div className="bg-gradient-to-r from-blue-950/40 via-cyan-950/20 to-purple-950/40 border border-cyan-500/30 rounded-2xl p-6 relative overflow-hidden">
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                   <div className="space-y-1">
@@ -514,7 +597,7 @@ Provide extremely crisp, actionable, high-converting, professional outputs. No f
                       $10,000 / Month Autonomous Milestone Tracker
                     </h3>
                     <p className="text-sm text-slate-300">
-                      Agents are generating, outreaching, and closing deals 24/7 without manual intervention.
+                      Run outreach agents to close your first 10 clients at $1,000/mo or 50 subscribers at $199/mo.
                     </p>
                   </div>
                   <div className="text-right">
@@ -523,7 +606,6 @@ Provide extremely crisp, actionable, high-converting, professional outputs. No f
                   </div>
                 </div>
 
-                {/* VISUAL PROGRESS BAR */}
                 <div className="mt-5 space-y-2">
                   <div className="flex justify-between text-xs text-slate-400 font-medium">
                     <span>Current: ${revenue.toLocaleString()}</span>
@@ -538,120 +620,6 @@ Provide extremely crisp, actionable, high-converting, professional outputs. No f
                 </div>
               </div>
 
-              {/* REVENUE CHART & AGENT ATTRIBUTION */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-                {/* SVG CHART - REVENUE GROWTH TRAJECTORY */}
-                <div className="lg:col-span-2 bg-[#0e121b]/80 backdrop-blur-md rounded-2xl border border-slate-800/80 p-5 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="text-sm font-bold text-white">MRR Growth Trajectory</h4>
-                      <p className="text-xs text-slate-400">Actual vs Projected automated revenue</p>
-                    </div>
-                    <div className="flex items-center space-x-3 text-xs">
-                      <span className="flex items-center gap-1.5 text-slate-300">
-                        <span className="w-2.5 h-2.5 rounded-full bg-cyan-400"></span> Actual MRR
-                      </span>
-                      <span className="flex items-center gap-1.5 text-slate-400">
-                        <span className="w-2.5 h-2.5 rounded-full bg-slate-600"></span> Target Forecast
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* SVG Chart Graphic */}
-                  <div className="h-56 w-full pt-4">
-                    <svg className="w-full h-full overflow-visible" viewBox="0 0 500 150">
-                      {/* Grid Lines */}
-                      <line x1="0" y1="30" x2="500" y2="30" stroke="#1e293b" strokeDasharray="4 4" />
-                      <line x1="0" y1="75" x2="500" y2="75" stroke="#1e293b" strokeDasharray="4 4" />
-                      <line x1="0" y1="120" x2="500" y2="120" stroke="#1e293b" strokeDasharray="4 4" />
-
-                      {/* Forecast Line */}
-                      <path
-                        d="M 0,130 Q 125,100 250,60 T 500,10"
-                        fill="none"
-                        stroke="#334155"
-                        strokeWidth="2"
-                        strokeDasharray="6 6"
-                      />
-
-                      {/* Actual MRR Line */}
-                      <path
-                        d="M 0,140 Q 100,110 200,90 T 350,50 T 500,25"
-                        fill="none"
-                        stroke="url(#cyanGrad)"
-                        strokeWidth="3"
-                      />
-
-                      {/* Area Fill */}
-                      <path
-                        d="M 0,140 Q 100,110 200,90 T 350,50 T 500,25 L 500,150 L 0,150 Z"
-                        fill="url(#cyanArea)"
-                        opacity="0.2"
-                      />
-
-                      <defs>
-                        <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stopColor="#3b82f6" />
-                          <stop offset="50%" stopColor="#06b6d4" />
-                          <stop offset="100%" stopColor="#10b981" />
-                        </linearGradient>
-                        <linearGradient id="cyanArea" x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor="#06b6d4" />
-                          <stop offset="100%" stopColor="transparent" />
-                        </linearGradient>
-                      </defs>
-
-                      {/* Data Points */}
-                      <circle cx="200" cy="90" r="4" fill="#06b6d4" />
-                      <circle cx="350" cy="50" r="4" fill="#06b6d4" />
-                      <circle cx="500" cy="25" r="5" fill="#10b981" className="animate-pulse" />
-                    </svg>
-                  </div>
-                  <div className="flex justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-800">
-                    <span>Week 1</span>
-                    <span>Week 2</span>
-                    <span>Week 3</span>
-                    <span>Week 4 (Current)</span>
-                    <span>Goal ($10k)</span>
-                  </div>
-                </div>
-
-                {/* AGENT REVENUE CONTRIBUTION */}
-                <div className="bg-[#0e121b]/80 backdrop-blur-md rounded-2xl border border-slate-800/80 p-5 space-y-4">
-                  <h4 className="text-sm font-bold text-white">Revenue Attribution by Agent</h4>
-                  
-                  <div className="space-y-4 pt-1">
-                    {agents.map(agent => (
-                      <div key={agent.id} className="space-y-1.5">
-                        <div className="flex justify-between text-xs font-medium">
-                          <span className="text-slate-300">{agent.name.split(' ')[0]} Agent</span>
-                          <span className="text-white font-bold">${agent.yieldMRR}</span>
-                        </div>
-                        <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                          <div 
-                            className={`h-full bg-gradient-to-r ${agent.color}`}
-                            style={{ width: `${(agent.yieldMRR / revenue) * 100}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="pt-4 border-t border-slate-800/80">
-                    <div className="p-3 bg-cyan-500/5 rounded-xl border border-cyan-500/20 text-xs text-cyan-300">
-                      <p className="font-semibold flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5" /> Autonomous System Insight
-                      </p>
-                      <p className="text-slate-400 mt-1">
-                        Outreach Agent yields highest direct conversion. Recommend allocating +20% run cycles to B2B Lead Scraping.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-
             </div>
           )}
 
@@ -663,30 +631,26 @@ Provide extremely crisp, actionable, high-converting, professional outputs. No f
                   <h2 className="text-lg font-bold text-white">Autonomous Agent Fleet Console</h2>
                   <p className="text-xs text-slate-400">Manage, configure, and force-trigger AI worker nodes</p>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-xs text-slate-400">Active Node Status:</span>
-                  <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    4/4 Operational
-                  </span>
-                </div>
+                <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                  {agents.filter(a => a.status === 'running').length}/{agents.length} Active Nodes
+                </span>
               </div>
 
               {/* AGENTS GRID */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {agents.map((agent) => {
-                  const IconComponent = agent.icon;
+                  const IconComponent = agent.icon || Cpu;
                   const isRunning = agent.status === 'running';
 
                   return (
                     <div 
                       key={agent.id}
-                      className={`bg-[#0e121b]/80 backdrop-blur-md rounded-2xl border ${agent.borderColor} p-6 space-y-5 relative overflow-hidden transition-all hover:border-slate-600`}
+                      className={`bg-[#0e121b]/80 backdrop-blur-md rounded-2xl border ${agent.borderColor || 'border-slate-800'} p-6 space-y-5 relative overflow-hidden transition-all hover:border-slate-600`}
                     >
-                      {/* Top Bar */}
                       <div className="flex items-start justify-between">
                         <div className="flex items-center space-x-3">
-                          <div className={`p-3 rounded-xl ${agent.bgColor} ${agent.textColor} border ${agent.borderColor}`}>
+                          <div className={`p-3 rounded-xl ${agent.bgColor || 'bg-slate-800'} ${agent.textColor || 'text-cyan-400'}`}>
                             <IconComponent className="w-6 h-6" />
                           </div>
                           <div>
@@ -695,13 +659,12 @@ Provide extremely crisp, actionable, high-converting, professional outputs. No f
                           </div>
                         </div>
 
-                        {/* Status Toggle Button */}
                         <button
                           onClick={() => toggleAgentStatus(agent.id)}
                           className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
                             isRunning 
-                              ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20' 
-                              : 'bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20'
+                              ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' 
+                              : 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
                           }`}
                         >
                           {isRunning ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
@@ -709,34 +672,15 @@ Provide extremely crisp, actionable, high-converting, professional outputs. No f
                         </button>
                       </div>
 
-                      {/* Description */}
                       <p className="text-xs text-slate-300 leading-relaxed">
                         {agent.description}
                       </p>
 
-                      {/* Live Task Indicator */}
                       <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-xs space-y-1">
                         <span className="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Active Task</span>
                         <p className="text-slate-200 font-mono truncate">{agent.currentTask}</p>
                       </div>
 
-                      {/* Metrics Footer */}
-                      <div className="grid grid-cols-3 gap-2 pt-2 border-t border-slate-800/80 text-center">
-                        <div>
-                          <p className="text-[10px] text-slate-400 uppercase">Frequency</p>
-                          <p className="text-xs font-bold text-slate-200 mt-0.5">{agent.frequency}</p>
-                        </div>
-                        <div>
-                          <p className="text-[10px] text-slate-400 uppercase">Yield (MRR)</p>
-                          <p className="text-xs font-bold text-cyan-400 mt-0.5">${agent.yieldMRR}</p>
-                        </div>
-                        <div>
-                          <p className="text-[10px] text-slate-400 uppercase">Total Tasks</p>
-                          <p className="text-xs font-bold text-slate-200 mt-0.5">{agent.processedCount}</p>
-                        </div>
-                      </div>
-
-                      {/* Action Triggers */}
                       <div className="flex items-center space-x-2 pt-1">
                         <button
                           onClick={() => triggerManualRun(agent.id)}
@@ -746,7 +690,6 @@ Provide extremely crisp, actionable, high-converting, professional outputs. No f
                           Force Execution
                         </button>
                       </div>
-
                     </div>
                   );
                 })}
@@ -770,39 +713,14 @@ Provide extremely crisp, actionable, high-converting, professional outputs. No f
                 </button>
               </div>
 
-              {/* TERMINAL CONTAINER */}
               <div className="bg-[#05070b] border border-slate-800 rounded-2xl p-4 font-mono text-xs text-slate-300 h-[520px] overflow-y-auto space-y-2 shadow-2xl relative">
-                <div className="sticky top-0 bg-[#05070b]/90 backdrop-blur pb-2 mb-2 border-b border-slate-800 flex items-center justify-between text-[11px] text-slate-500">
-                  <span>JARVIS TELEMETRY DEPLOYMENT // NODE: PRODUCTION-US-EAST</span>
-                  <span className="flex items-center gap-1 text-emerald-400">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    STREAMING LIVE
-                  </span>
-                </div>
-
-                {logs.length === 0 ? (
-                  <p className="text-slate-600 italic">No logs recorded. Waiting for agent activity...</p>
-                ) : (
-                  logs.map((log) => (
-                    <div key={log.id} className="flex items-start space-x-3 py-1 hover:bg-slate-900/40 rounded px-2 transition">
-                      <span className="text-slate-500 shrink-0">[{log.time}]</span>
-                      <span className={`font-bold shrink-0 ${
-                        log.agent.includes('Content') ? 'text-blue-400' :
-                        log.agent.includes('Outreach') ? 'text-emerald-400' :
-                        log.agent.includes('Upsell') ? 'text-purple-400' : 'text-amber-400'
-                      }`}>
-                        [{log.agent}]:
-                      </span>
-                      <span className={`flex-1 ${
-                        log.type === 'revenue' ? 'text-emerald-300 font-semibold' :
-                        log.type === 'success' ? 'text-slate-200' :
-                        log.type === 'warn' ? 'text-amber-300' : 'text-slate-400'
-                      }`}>
-                        {log.text}
-                      </span>
-                    </div>
-                  ))
-                )}
+                {logs.map((log) => (
+                  <div key={log.id} className="flex items-start space-x-3 py-1 hover:bg-slate-900/40 rounded px-2 transition">
+                    <span className="text-slate-500 shrink-0">[{log.time}]</span>
+                    <span className="font-bold shrink-0 text-cyan-400">[{log.agent}]:</span>
+                    <span className="flex-1 text-slate-300">{log.text}</span>
+                  </div>
+                ))}
               </div>
             </div>
           )}
@@ -813,78 +731,73 @@ Provide extremely crisp, actionable, high-converting, professional outputs. No f
               <div>
                 <h2 className="text-lg font-bold text-white flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-cyan-400" />
-                  Gemini Autonomous Content & Outreach Studio
+                  Gemini Autonomous Strategy Studio
                 </h2>
-                <p className="text-xs text-slate-400">Directly prompt the live Gemini API engine for high-converting marketing & cold outreach assets</p>
+                <p className="text-xs text-slate-400">Directly prompt the live Gemini API engine for high-converting marketing & outreach strategy</p>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-                {/* PROMPT CONTROLS */}
                 <div className="bg-[#0e121b]/80 backdrop-blur-md rounded-2xl border border-slate-800/80 p-5 space-y-4">
                   
-                  {/* Select Task Type */}
                   <div className="space-y-1.5">
                     <label className="text-xs font-semibold text-slate-300">Select Task Category</label>
                     <div className="grid grid-cols-3 gap-2">
                       <button
                         onClick={() => {
+                          setGeminiTask('niche');
+                          setGeminiPrompt('Analyze top 3 lucrative B2B niches for AI automation services and draft buyer personas.');
+                        }}
+                        className={`p-2.5 rounded-xl text-xs font-medium border text-center transition ${
+                          geminiTask === 'niche' ? 'bg-cyan-500/20 border-cyan-500/40 text-cyan-300' : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200'
+                        }`}
+                      >
+                        Niche Analysis
+                      </button>
+                      <button
+                        onClick={() => {
                           setGeminiTask('outreach');
-                          setGeminiPrompt('Write a personalized high-converting B2B cold outreach email to pitch an AI productivity tool to a Tech Founder.');
+                          setGeminiPrompt('Write a personalized high-converting B2B cold email sequence for marketing agency owners.');
                         }}
                         className={`p-2.5 rounded-xl text-xs font-medium border text-center transition ${
                           geminiTask === 'outreach' ? 'bg-cyan-500/20 border-cyan-500/40 text-cyan-300' : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200'
                         }`}
                       >
-                        Cold Outreach
+                        Cold Email Pitch
                       </button>
                       <button
                         onClick={() => {
-                          setGeminiTask('content');
-                          setGeminiPrompt('Write a viral 5-part X/Twitter thread breaking down how AI agents can automate a $10,000/mo Micro-SaaS business.');
+                          setGeminiTask('social');
+                          setGeminiPrompt('Draft a 5-part LinkedIn content series showcasing AI automation results for small businesses.');
                         }}
                         className={`p-2.5 rounded-xl text-xs font-medium border text-center transition ${
-                          geminiTask === 'content' ? 'bg-cyan-500/20 border-cyan-500/40 text-cyan-300' : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200'
+                          geminiTask === 'social' ? 'bg-cyan-500/20 border-cyan-500/40 text-cyan-300' : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200'
                         }`}
                       >
-                        Viral Post
-                      </button>
-                      <button
-                        onClick={() => {
-                          setGeminiTask('product');
-                          setGeminiPrompt('Propose 3 profitable Micro-SaaS ideas with target pricing tiers, target audience, and key AI feature stack.');
-                        }}
-                        className={`p-2.5 rounded-xl text-xs font-medium border text-center transition ${
-                          geminiTask === 'product' ? 'bg-cyan-500/20 border-cyan-500/40 text-cyan-300' : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200'
-                        }`}
-                      >
-                        Micro-SaaS Ideas
+                        Social Content
                       </button>
                     </div>
                   </div>
 
-                  {/* Prompt Text Input */}
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-slate-300">Prompt / Agent Directive</label>
+                    <label className="text-xs font-semibold text-slate-300">Prompt Directive</label>
                     <textarea
                       rows={5}
                       value={geminiPrompt}
                       onChange={(e) => setGeminiPrompt(e.target.value)}
-                      className="w-full bg-slate-900/90 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50 resize-none font-sans"
-                      placeholder="Enter custom directives for the Gemini Agent Engine..."
+                      className="w-full bg-slate-900/90 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50 resize-none"
                     />
                   </div>
 
-                  {/* Submit Button */}
                   <button
                     onClick={handleGeminiGenerate}
                     disabled={isGenerating}
-                    className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-bold text-xs rounded-xl shadow-lg shadow-cyan-500/20 transition flex items-center justify-center gap-2 disabled:opacity-50"
+                    className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-bold text-xs rounded-xl transition flex items-center justify-center gap-2 disabled:opacity-50"
                   >
                     {isGenerating ? (
                       <>
                         <RefreshCw className="w-4 h-4 animate-spin text-black" />
-                        Generating with Gemini API...
+                        Generating Asset...
                       </>
                     ) : (
                       <>
@@ -896,10 +809,9 @@ Provide extremely crisp, actionable, high-converting, professional outputs. No f
 
                 </div>
 
-                {/* OUTPUT DISPLAY */}
                 <div className="bg-[#0e121b]/80 backdrop-blur-md rounded-2xl border border-slate-800/80 p-5 flex flex-col space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold text-slate-400">Generated Output</span>
+                    <span className="text-xs font-semibold text-slate-400">Generated Strategy</span>
                     {geminiOutput && (
                       <button
                         onClick={copyOutput}
@@ -915,13 +827,13 @@ Provide extremely crisp, actionable, high-converting, professional outputs. No f
                     {isGenerating ? (
                       <div className="h-full flex flex-col items-center justify-center text-slate-500 space-y-2">
                         <RefreshCw className="w-6 h-6 animate-spin text-cyan-400" />
-                        <p className="animate-pulse">JARVIS is querying Gemini 3 Flash Preview...</p>
+                        <p className="animate-pulse">JARVIS is generating strategy...</p>
                       </div>
                     ) : geminiOutput ? (
                       geminiOutput
                     ) : (
                       <span className="text-slate-600 italic">
-                        Select a task category or enter custom instructions above, then click "Generate Strategy Asset" to trigger live generation.
+                        Select a task category or enter custom instructions above, then click "Generate Strategy Asset" to trigger generation.
                       </span>
                     )}
                   </div>
@@ -932,6 +844,40 @@ Provide extremely crisp, actionable, high-converting, professional outputs. No f
           )}
 
         </main>
+      </div>
+
+      {/* FLOATING VOICE CONTROL WIDGET */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <div className="bg-[#0e121b]/95 backdrop-blur-xl border border-cyan-500/40 p-4 rounded-2xl shadow-2xl w-80 sm:w-96 space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <div className={`w-3 h-3 rounded-full ${isSpeaking ? 'bg-emerald-400 animate-ping' : isListening ? 'bg-cyan-400 animate-pulse' : 'bg-slate-600'}`}></div>
+              <span className="text-xs font-bold text-white tracking-wider">JARVIS VOICE CORE</span>
+            </div>
+            {isSpeaking && <Volume2 className="w-4 h-4 text-emerald-400 animate-pulse" />}
+          </div>
+
+          <div className="p-3 bg-slate-950/80 rounded-xl border border-slate-800 text-xs text-slate-300 max-h-28 overflow-y-auto font-sans">
+            {voiceResponse}
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <input
+              type="text"
+              value={voiceQuery}
+              onChange={(e) => setVoiceQuery(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && processVoiceQuery(voiceQuery)}
+              placeholder="Ask JARVIS anything..."
+              className="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-cyan-500/50"
+            />
+            <button
+              onClick={handleVoiceInput}
+              className={`p-2.5 rounded-xl border transition ${isListening ? 'bg-cyan-500 text-black border-cyan-400' : 'bg-slate-800 text-cyan-400 border-slate-700 hover:bg-slate-700'}`}
+            >
+              {isListening ? <MicOff className="w-4 h-4 animate-bounce" /> : <Mic className="w-4 h-4" />}
+            </button>
+          </div>
+        </div>
       </div>
 
     </div>
